@@ -1,5 +1,6 @@
 import restify from 'restify'
 import { graphqlRestify, graphiqlRestify } from 'apollo-server-restify'
+import { makeExecutableSchema } from 'graphql-tools'
 
 const PORT = 9000
 
@@ -7,14 +8,25 @@ const server = restify.createServer({
     title: 'Apollo Server'
 })
 
-const mySchema = `
-
-    type User {
-        name: String!
-        email: String!
+const typeDefs = [`
+    type Query {
+        hello: String
     }
 
-`
+    schema {
+        query: Query
+    }
+`]
+
+const resolvers = {
+    Query: {
+        hello(root) {
+        return 'world';
+        }
+    }
+}
+
+const mySchema = makeExecutableSchema({ typeDefs, resolvers })
 
 const graphQLOptions = { schema: mySchema }
 
